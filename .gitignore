@@ -216,3 +216,26 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Model weights / checkpoints
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.pkl
+*.ckpt
+*.onnx
+*.keras
+weights/
+checkpoints/
+
+# Datasets (never commit raw data)
+data/
+dataset/
+datasets/
+*.zip
+*.tar.gz
+
+# OS-specific
+.DS_Store
+Thumbs.db
