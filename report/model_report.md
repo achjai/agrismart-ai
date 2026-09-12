@@ -9,7 +9,7 @@ diseases, or "healthy" for unaffected leaves.
 ## Dataset & Split
 - **Source:** New Plant Diseases Dataset (Augmented) — a PlantVillage-derived dataset,
   publicly available on Kaggle:
-  https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
+  [New Plant Diseases Dataset](https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset)
 - **License:** copyright-authors (as listed on the Kaggle dataset page)
 - **Classes:** 38 crop-disease categories (including healthy classes)
 - **Training set:** 70,295 images
@@ -56,8 +56,8 @@ Evaluated on the full validation set (17,572 images):
 | Weighted-F1 | 0.9490 |
 
 Per-class precision/recall/F1 and the full confusion matrix were computed
-(see `confusion_matrix.png` below, and the notebook in `/model` for the full
-per-class breakdown).
+(see [`confusion_matrix.png`](confusion_matrix.png) below, and the
+[training notebook](../model/training.ipynb) for the full per-class breakdown).
 
 ## Baseline
 No official baseline metric was published to our team for this challenge. Our
@@ -84,9 +84,9 @@ of the public training dataset, not on the organizers' independent test set.
   official ~15–20 class shared list was provided during the competition window.
 
 ## Files
-- Full training/evaluation notebook: `/model/training.ipynb`
-- Trained model weights: hosted on Google Drive (see README for link and load
-  instructions — `load_weights()`, not `load_model()`, due to a Keras
+- Full training/evaluation notebook: [`/model/training.ipynb`](../model/training.ipynb)
+- Trained model weights: hosted on Google Drive (see [README](../README.md) for link
+  and load instructions — `load_weights()`, not `load_model()`, due to a Keras
   Lambda-layer serialization limitation)
 - Class-index mapping: `class_indices.json` (hosted alongside weights on Drive)
 
