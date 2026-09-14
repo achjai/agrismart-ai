@@ -11,6 +11,6 @@ mkdir -p model/weights
 # Download the main ResNet50 model weights from Google Drive using gdown
 # The file ID is passed from Render Environment Variables as MODEL_DRIVE_ID
 echo "Downloading model weights from Google Drive..."
-gdown --id $MODEL_DRIVE_ID -O model/weights/RESNET50_FINETUNED.weights.h5
+gdown $MODEL_DRIVE_ID -O model/weights/RESNET50_FINETUNED.weights.h5
 
 echo "Build complete."
