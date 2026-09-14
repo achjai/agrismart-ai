@@ -1,10 +1,9 @@
 fastapi
 uvicorn
 python-multipart
-tensorflow
+tensorflow-cpu
 numpy
 scikit-learn
 pandas
 requests
-google-generativeai
 python-dotenv
