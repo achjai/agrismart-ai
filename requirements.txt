@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+tensorflow
+numpy
+scikit-learn
+pandas
+requests
+google-generativeai
+python-dotenv

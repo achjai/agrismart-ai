@@ -2,205 +2,1235 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AgriSmart AI - Crop Disease Detector</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriSmart AI — Agricultural Decision Support System</title>
+<meta name="description" content="AgriSmart AI: crop disease detection, irrigation advisory, crop recommendation and AI farm assistant.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f4f7f4;
-  }
-  h1 {
-    color: #2e7d32;
-    text-align: center;
-  }<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>AgriSmart AI - Crop Disease Detector</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f4f7f4;
-  }
-  h1 {
-    color: #2e7d32;
-    text-align: center;
-  }
-  .upload-box {
-    background: white;
-    border: 2px dashed #a5d6a7;
-    border-radius: 10px;
-    padding: 30px;
-    text-align: center;
-  }
-  input[type="file"] {
-    margin: 15px 0;
-  }
-  button {
-    background: #2e7d32;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  button:hover {
-    background: #1b5e20;
-  }
-  button:disabled {
-    background: #aaa;
-    cursor: not-allowed;
-  }
-  #result {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    background: white;
-    display: none;
-  }
-  #result.show {
-    display: block;
-  }
-  .disease-name {
-    font-size: 20px;
-    font-weight: bold;
-    color: #1b5e20;
-  }
-  .confidence {
-    color: #555;
-    margin-top: 5px;
-  }
-  .precaution {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #e0e0e0;
-    color: #333;
-    line-height: 1.4;
-  }
-  .precaution-label {
-    font-weight: bold;
-    color: #2e7d32;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .warning {
-    margin-top: 12px;
-    padding: 10px;
-    background: #fff8e1;
-    border: 1px solid #ffe082;
-    border-radius: 6px;
-    color: #8d6e00;
-    font-size: 14px;
-  }
-  #preview {
-    max-width: 100%;
-    margin-top: 15px;
-    border-radius: 8px;
-    display: none;
-  }
-  .error {
-    color: #c62828;
-  }
+    :root {
+        --navy:        #12355b;
+        --navy-dark:   #0d2743;
+        --navy-light:  #1d4a7a;
+        --green:       #1f5130;
+        --green-light: #2d6a4f;
+        --bg:          #eef1f4;
+        --surface:     #ffffff;
+        --surface-alt: #f7f9fa;
+        --border:      #d3dae0;
+        --border-2:    #b8c2cb;
+        --text:        #10161d;
+        --text-2:      #3d4954;
+        --muted:       #64717e;
+        --amber-bg:    #fdf8e8;
+        --amber-bd:    #e0c56a;
+        --amber-tx:    #6b5312;
+        --red:         #a3231f;
+        --ok:          #1f6f43;
+        --ok-bg:       #eef7f2;
+        --ok-bd:       #a8d5bd;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.55;
+        font-size: 15px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOP UTILITY STRIP ───────────────────────────── */
+    .util-strip {
+        background: var(--navy-dark);
+        color: #c2d2e0;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0 32px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    .util-strip .util-right { display: flex; gap: 22px; align-items: center; }
+    .util-strip strong { color: #ffffff; font-weight: 600; }
+
+    /* ── MASTHEAD ────────────────────────────────────── */
+    .masthead {
+        background: var(--surface);
+        border-bottom: 3px solid var(--navy);
+        padding: 18px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    .masthead-left { display: flex; align-items: center; gap: 16px; }
+    .emblem {
+        width: 54px; height: 54px;
+        border: 2px solid var(--navy);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        background: var(--surface-alt);
+    }
+    .masthead-text h1 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+    }
+    .masthead-text p {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .sys-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        padding: 8px 14px;
+        background: var(--surface-alt);
+        font-size: 0.78rem;
+        color: var(--text-2);
+    }
+    .sys-dot {
+        width: 9px; height: 9px;
+        background: var(--muted);
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .sys-dot.online  { background: var(--ok); }
+    .sys-dot.offline { background: var(--red); }
+
+    /* ── NAVIGATION ──────────────────────────────────── */
+    .nav {
+        background: var(--navy);
+        padding: 0 32px;
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        overflow-x: auto;
+    }
+    .nav a {
+        color: #cbdae7;
+        text-decoration: none;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        padding: 14px 20px;
+        border-bottom: 3px solid transparent;
+        white-space: nowrap;
+        transition: background 0.15s, color 0.15s;
+    }
+    .nav a:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav a.active { border-bottom-color: #7fb069; color: #fff; }
+
+    /* ── LAYOUT ──────────────────────────────────────── */
+    .container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 26px 24px 0;
+    }
+
+    .page-head { margin-bottom: 22px; }
+    .breadcrumb {
+        font-size: 0.72rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+    }
+    .breadcrumb span { color: var(--text-2); }
+    .page-head h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: -0.01em;
+    }
+    .page-head .lede {
+        font-size: 0.88rem;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 780px;
+    }
+
+    /* ── NOTICE / DISCLAIMER ─────────────────────────── */
+    .notice {
+        background: var(--amber-bg);
+        border: 1px solid var(--amber-bd);
+        border-left: 4px solid #c9a227;
+        border-radius: 3px;
+        padding: 13px 18px;
+        margin-bottom: 24px;
+    }
+    .notice-title {
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--amber-tx);
+        margin-bottom: 4px;
+    }
+    .notice p {
+        font-size: 0.83rem;
+        color: var(--amber-tx);
+        line-height: 1.55;
+    }
+
+    /* ── SECTION HEADINGS ────────────────────────────── */
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin: 34px 0 14px;
+        border-bottom: 1px solid var(--border-2);
+        padding-bottom: 8px;
+        scroll-margin-top: 60px;
+    }
+    .section-num {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: 0.12em;
+        font-variant-numeric: tabular-nums;
+    }
+    .section-head h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--navy);
+    }
+    .section-head .section-note {
+        margin-left: auto;
+        font-size: 0.74rem;
+        color: var(--muted);
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    /* ── CARDS ───────────────────────────────────────── */
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 20px;
+    }
+    .card-head {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .card-sub { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+
+    .tag {
+        font-size: 0.63rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border: 1px solid var(--border-2);
+        border-radius: 2px;
+        color: var(--text-2);
+        background: var(--surface-alt);
+        flex-shrink: 0;
+    }
+    .tag-live { color: var(--ok); border-color: var(--ok-bd); background: var(--ok-bg); }
+    .tag-ai   { color: var(--navy); border-color: #b9cde0; background: #eef4f9; }
+
+    /* ── GRIDS ───────────────────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+
+    /* ── METRIC TABLE ────────────────────────────────── */
+    .metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid var(--border);
+        border-left: 1px solid var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    .metric {
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 12px;
+        background: var(--surface-alt);
+        text-align: center;
+    }
+    .metric-label {
+        font-size: 0.66rem;
+        color: var(--muted);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--navy);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+    }
+    .metric-unit { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── SCORE ───────────────────────────────────────── */
+    .score-section {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 4px 0 16px;
+    }
+    .score-ring-wrap { position: relative; flex-shrink: 0; }
+    .score-ring { width: 76px; height: 76px; transform: rotate(-90deg); }
+    .score-bg   { fill: none; stroke: #e3e9ee; stroke-width: 6; }
+    .score-fill {
+        fill: none;
+        stroke: var(--green-light);
+        stroke-width: 6;
+        stroke-linecap: butt;
+        stroke-dasharray: 188.5;
+        stroke-dashoffset: 188.5;
+        transition: stroke-dashoffset 1s ease;
+    }
+    .score-num {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.05rem; font-weight: 700; color: var(--navy);
+        font-variant-numeric: tabular-nums;
+    }
+    .score-info { flex: 1; }
+    .score-label { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .score-msg { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── AGENT LOG ───────────────────────────────────── */
+    .agent-wrap { border-top: 1px solid var(--border); padding-top: 14px; }
+    .agent-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 9px;
+    }
+    .agent-log {
+        font-size: 0.79rem;
+        color: var(--text-2);
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--border-2);
+        padding: 7px 11px;
+        margin-bottom: 6px;
+        border-radius: 2px;
+        line-height: 1.45;
+    }
+    .agent-log .log-time {
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        margin-right: 7px;
+    }
+    .agent-empty { font-size: 0.79rem; color: var(--muted); font-style: italic; }
+
+    /* ── WEATHER ─────────────────────────────────────── */
+    .weather-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 16px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+    }
+    .weather-glyph {
+        width: 54px; height: 54px;
+        border: 1px solid var(--border-2);
+        border-radius: 3px;
+        display: flex; align-items: center; justify-content: center;
+        background: #fff;
+        flex-shrink: 0;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.2;
+    }
+    .weather-temp {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--navy);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+    }
+    .weather-desc { font-size: 0.79rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── FORMS ───────────────────────────────────────── */
+    label {
+        font-size: 0.75rem;
+        color: var(--text-2);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="file"], input[type="number"], input[type="text"] {
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border-2);
+        border-radius: 3px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.88rem;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input:focus {
+        border-color: var(--navy-light);
+        box-shadow: 0 0 0 3px rgba(29,74,122,0.12);
+    }
+    input::placeholder { color: #9aa5b0; }
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    /* ── BUTTONS ─────────────────────────────────────── */
+    .btn {
+        width: 100%;
+        background: var(--navy);
+        color: #fff;
+        border: 1px solid var(--navy);
+        padding: 12px 20px;
+        border-radius: 3px;
+        font-family: inherit;
+        font-size: 0.79rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+    .btn:hover:not(:disabled) { background: var(--navy-light); border-color: var(--navy-light); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-sm { padding: 11px 16px; width: auto; }
+
+    /* ── UPLOAD ──────────────────────────────────────── */
+    .upload-zone {
+        border: 2px dashed var(--border-2);
+        border-radius: 3px;
+        padding: 26px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+        margin-bottom: 16px;
+        position: relative;
+        background: var(--surface-alt);
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+        border-color: var(--navy-light);
+        background: #eef4f9;
+    }
+    .upload-zone input[type="file"] {
+        position: absolute; inset: 0;
+        opacity: 0; cursor: pointer;
+        width: 100%; height: 100%;
+    }
+    .upload-title {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    .upload-text { font-size: 0.78rem; color: var(--muted); }
+    #preview {
+        max-width: 100%;
+        border-radius: 3px;
+        margin-top: 12px;
+        display: none;
+        max-height: 220px;
+        object-fit: cover;
+        width: 100%;
+        border: 1px solid var(--border);
+    }
+
+    /* ── RESULT PANELS ───────────────────────────────── */
+    .result-box {
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+        display: none;
+    }
+    .result-box.show { display: block; }
+    .result-inner { padding: 14px 16px; background: var(--surface-alt); }
+    .result-box.error .result-inner { background: #fdf1f0; border-color: var(--red); }
+    .result-label {
+        font-size: 0.66rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+    .result-value { font-size: 1.05rem; font-weight: 700; color: var(--navy); }
+    .result-box.error .result-value { color: var(--red); }
+    .result-divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .confidence-wrap { margin-top: 10px; }
+    .confidence-bg {
+        background: #e3e9ee;
+        border-radius: 0;
+        height: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+    .confidence-bar {
+        height: 100%;
+        background: var(--green-light);
+        transition: width 0.6s ease;
+    }
+    .result-note {
+        font-size: 0.78rem;
+        color: var(--text-2);
+        line-height: 1.5;
+    }
+
+    /* ── CHAT ────────────────────────────────────────── */
+    .chat-box {
+        height: 250px;
+        overflow-y: auto;
+        padding: 14px;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+    }
+    .chat-box::-webkit-scrollbar { width: 8px; }
+    .chat-box::-webkit-scrollbar-track { background: var(--surface-alt); }
+    .chat-box::-webkit-scrollbar-thumb { background: var(--border-2); }
+
+    .msg {
+        max-width: 82%;
+        padding: 10px 14px;
+        border-radius: 3px;
+        font-size: 0.86rem;
+        line-height: 1.55;
+        border: 1px solid transparent;
+    }
+    .msg-user {
+        background: var(--navy);
+        color: #fff;
+        align-self: flex-end;
+        border-color: var(--navy);
+    }
+    .msg-bot {
+        background: #fff;
+        border-color: var(--border);
+        color: var(--text-2);
+        align-self: flex-start;
+    }
+    .msg-thinking { color: var(--muted); font-style: italic; font-size: 0.8rem; }
+
+    .chat-input-row { display: flex; gap: 10px; }
+    .chat-input-row input { flex: 1; }
+
+    .inline-note {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 10px;
+        padding: 9px 12px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--border-2);
+        border-radius: 2px;
+        line-height: 1.5;
+    }
+    .inline-note strong { color: var(--text-2); }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+        background: var(--surface);
+        border-top: 3px solid var(--navy);
+        margin-top: 50px;
+        padding: 28px 32px;
+    }
+    .footer-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    .footer-col h4 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--navy);
+        margin-bottom: 8px;
+    }
+    .footer-col p, .footer-col li {
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.65;
+        list-style: none;
+    }
+    .footer-col a { color: var(--navy-light); text-decoration: none; }
+    .footer-col a:hover { text-decoration: underline; }
+
+    .footer-bottom {
+        max-width: 1240px;
+        margin: 20px auto 0;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        font-size: 0.73rem;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 980px) {
+        .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        .util-strip, .masthead, .nav, footer { padding-left: 18px; padding-right: 18px; }
+        .container { padding: 20px 16px 0; }
+        .util-strip .util-right { display: none; }
+        .footer-inner { flex-direction: column; gap: 18px; }
+    }
 </style>
 </head>
 <body>
 
-<h1>AgriSmart AI</h1>
-<p style="text-align:center; color:#555;">Upload a leaf photo to check for disease</p>
-
-<div class="upload-box">
-  <input type="file" id="imageInput" accept="image/*">
-  <br>
-  <img id="preview" alt="preview">
-  <br>
-  <button id="submitBtn">Check Disease</button>
+<!-- ══ UTILITY STRIP ══════════════════════════════════ -->
+<div class="util-strip">
+    <div>Agricultural Informatics &amp; Decision Support Platform</div>
+    <div class="util-right">
+        <span>Classification: <strong>Research Prototype</strong></span>
+        <span>System Time: <strong id="sysClock">--:--:--</strong></span>
+    </div>
 </div>
 
-<div id="result"></div>
+<!-- ══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+    <div class="masthead-left">
+        <div class="emblem">
+            <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+                <path d="M20 35V19" stroke="#12355b" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M20 21C13.5 21 9 16.5 9 10c6.5 0 11 4.5 11 11z" fill="#1f5130"/>
+                <path d="M20 26c6.5 0 11-4.5 11-11-6.5 0-11 4.5-11 11z" fill="#2d6a4f"/>
+                <path d="M9 33h22" stroke="#12355b" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="masthead-text">
+            <h1>AgriSmart AI</h1>
+            <p>Intelligent Farm Advisory &amp; Monitoring System</p>
+        </div>
+    </div>
+    <div class="sys-status">
+        <span class="sys-dot" id="statusDot"></span>
+        <span id="statusText">Establishing connection to server…</span>
+    </div>
+</header>
+
+<!-- ══ NAVIGATION ═════════════════════════════════════ -->
+<nav class="nav">
+    <a href="#overview"  class="active">Overview</a>
+    <a href="#detection">Disease Detection</a>
+    <a href="#crop">Crop Advisory</a>
+    <a href="#assistant">Advisory Assistant</a>
+</nav>
+
+<div class="container">
+
+    <!-- ══ PAGE HEADING ═══════════════════════════════ -->
+    <div class="page-head">
+        <div class="breadcrumb">Home &nbsp;/&nbsp; <span>Farm Monitoring Dashboard</span></div>
+        <h2>Farm Monitoring &amp; Advisory Dashboard</h2>
+        <p class="lede">
+            Consolidated view of live field telemetry, environmental conditions, and machine-learning
+            advisory services. All sensor readings shown are simulated for demonstration purposes.
+        </p>
+    </div>
+
+    <!-- ══ NOTICE ═════════════════════════════════════ -->
+    <div class="notice">
+        <div class="notice-title">Advisory Notice</div>
+        <p>
+            Outputs produced by this system are generated by machine-learning models and automated
+            language services. They are provided for informational purposes only and do not constitute
+            professional agronomic advice. Consult a certified agronomist before acting on any
+            recommendation. Language-model responses may require 10–30 seconds to generate.
+        </p>
+    </div>
+
+    <!-- ══ 01 · LIVE MONITORING ═══════════════════════ -->
+    <div class="section-head" id="overview">
+        <span class="section-num">01</span>
+        <h3>Live Farm Monitoring</h3>
+        <span class="section-note">Refresh interval: 5 seconds</span>
+    </div>
+
+    <div class="grid-3">
+
+        <!-- IoT Sensors -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Field Sensor Telemetry</div>
+                    <div class="card-sub">Simulated sensor array · 5 s polling</div>
+                </div>
+                <span class="tag tag-live">Live</span>
+            </div>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-label">Soil Moisture</div>
+                    <div class="metric-value" id="valMoisture">--</div>
+                    <div class="metric-unit">percent</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Temperature</div>
+                    <div class="metric-value" id="valTemp">--</div>
+                    <div class="metric-unit">°C</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Humidity</div>
+                    <div class="metric-value" id="valHum">--</div>
+                    <div class="metric-unit">percent</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Soil pH</div>
+                    <div class="metric-value" id="valPh">--</div>
+                    <div class="metric-unit">pH scale</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sustainability -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Sustainability Index</div>
+                    <div class="card-sub">Composite resource-efficiency metric</div>
+                </div>
+            </div>
+            <div class="score-section">
+                <div class="score-ring-wrap">
+                    <svg class="score-ring" viewBox="0 0 70 70" aria-hidden="true">
+                        <circle class="score-bg"   cx="35" cy="35" r="30"/>
+                        <circle class="score-fill" id="scoreFill" cx="35" cy="35" r="30"/>
+                    </svg>
+                    <div class="score-num" id="scoreNum">--</div>
+                </div>
+                <div class="score-info">
+                    <div class="score-label" id="scoreLabel">Calculating…</div>
+                    <div class="score-msg" id="scoreMsg">Derived from moisture, temperature and pH balance</div>
+                </div>
+            </div>
+            <div class="agent-wrap">
+                <div class="agent-label">Automated Advisory Alerts</div>
+                <div id="agentLogs">
+                    <div class="agent-empty">No alerts recorded. Field conditions are within nominal range.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Meteorological Conditions</div>
+                    <div class="card-sub">Pune, Maharashtra · Open-Meteo service</div>
+                </div>
+            </div>
+            <div class="weather-row">
+                <div class="weather-glyph" id="weatherIcon">—</div>
+                <div>
+                    <div class="weather-temp" id="weatherTemp">--°C</div>
+                    <div class="weather-desc" id="weatherDesc">Retrieving meteorological data…</div>
+                </div>
+            </div>
+            <div class="inline-note" style="margin-top:14px;">
+                Precipitation forecasts are consumed by the irrigation advisory module to determine
+                whether scheduled watering should be deferred.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══ 02 · AI TOOLS ══════════════════════════════ -->
+    <div class="section-head" id="detection">
+        <span class="section-num">02</span>
+        <h3>Machine Learning Prediction Services</h3>
+        <span class="section-note">ResNet50 · Random Forest</span>
+    </div>
+
+    <div class="grid-2" style="margin-top:0;">
+
+        <!-- Disease Detection -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Crop Disease Detection</div>
+                    <div class="card-sub">ResNet50 classifier · 38 disease classes · PlantVillage dataset</div>
+                </div>
+            </div>
+
+            <div class="upload-zone" id="uploadZone">
+                <input type="file" id="imageInput" accept="image/*">
+                <div class="upload-title">Upload Leaf Specimen</div>
+                <div class="upload-text">Click to browse, or drag and drop a file here<br>Accepted formats: PNG, JPG, JPEG</div>
+            </div>
+            <img id="preview" alt="Uploaded leaf specimen preview">
+
+            <button class="btn" id="submitBtn">Run Disease Analysis</button>
+
+            <div id="diseaseResult" class="result-box">
+                <div class="result-inner">
+                    <div class="result-label">Detected Condition</div>
+                    <div class="result-value" id="diseaseName">—</div>
+
+                    <div class="confidence-wrap">
+                        <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.07em; font-weight:600;">
+                            <span>Model Confidence</span><span id="confText">—</span>
+                        </div>
+                        <div class="confidence-bg">
+                            <div class="confidence-bar" id="confBar" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-divider"></div>
+
+                    <div class="result-label">Recommended Action</div>
+                    <div class="result-note" id="adviceText">—</div>
+
+                    <div id="diseaseWarning" class="inline-note" style="display:none; border-left-color:#c9a227; background:var(--amber-bg); color:var(--amber-tx);">
+                        <strong>Note:</strong> <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crop Recommendation -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Crop Suitability Recommendation</div>
+                    <div class="card-sub">Random Forest regressor · Synthetic agronomic dataset</div>
+                </div>
+            </div>
+
+            <p style="font-size:0.82rem; color:var(--text-2); margin-bottom:16px;">
+                Enter measured soil nutrient values and annual rainfall. Ambient temperature,
+                humidity and pH are read automatically from the live sensor array at the moment of prediction.
+            </p>
+
+            <div class="input-grid">
+                <div>
+                    <label>Nitrogen (N) — kg/ha</label>
+                    <input type="number" id="cropN" placeholder="e.g. 80" min="0" max="200">
+                </div>
+                <div>
+                    <label>Phosphorus (P) — kg/ha</label>
+                    <input type="number" id="cropP" placeholder="e.g. 45" min="0" max="200">
+                </div>
+                <div>
+                    <label>Potassium (K) — kg/ha</label>
+                    <input type="number" id="cropK" placeholder="e.g. 40" min="0" max="200">
+                </div>
+                <div>
+                    <label>Rainfall — mm/year</label>
+                    <input type="number" id="cropRain" placeholder="e.g. 200" min="0" max="500">
+                </div>
+            </div>
+
+            <div class="inline-note" style="margin-bottom:16px;">
+                Temperature, humidity and soil pH are populated automatically from live telemetry
+                when the recommendation is generated.
+            </div>
+
+            <button class="btn" id="recBtn">Generate Recommendation</button>
+
+            <div id="recResult" class="result-box">
+                <div class="result-inner">
+                    <div class="result-label">Recommended Crop</div>
+                    <div class="result-value" id="recCropName">—</div>
+                    <div class="result-note" style="margin-top:8px;">
+                        Derived from soil NPK profile, annual rainfall, and live sensor readings
+                        for temperature, humidity and pH.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══ 03 · ASSISTANT ═════════════════════════════ -->
+    <div class="section-head" id="assistant">
+        <span class="section-num">03</span>
+        <h3>Automated Advisory Assistant</h3>
+        <span class="section-note">Language model · Sensor-context aware</span>
+    </div>
+
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <div class="card-title">Agricultural Advisory Query Interface</div>
+                <div class="card-sub">Powered by Liquid LFM · Context includes live field sensor readings</div>
+            </div>
+            <span class="tag tag-ai">AI Service</span>
+        </div>
+
+        <div class="notice" style="margin-bottom:16px;">
+            <div class="notice-title">Response Time Advisory</div>
+            <p>
+                Responses from the free-tier language model may take 10–30 seconds to generate.
+                A status indicator will appear in the conversation while the query is being processed.
+                Submit each query only once.
+            </p>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="msg msg-bot">
+                This is the AgriSmart advisory assistant. Live field telemetry — soil moisture,
+                temperature, humidity and soil pH — is available as context for your query.
+                You may ask about crop management, soil health, irrigation scheduling, or general
+                agricultural practice.
+            </div>
+        </div>
+
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Enter your query, e.g. Should irrigation be scheduled today?">
+            <button class="btn btn-sm" id="chatBtn">Send</button>
+        </div>
+
+        <div class="inline-note">
+            <strong>Disclaimer:</strong> Automated responses may be inaccurate or incomplete.
+            They are provided for informational purposes only and must not be treated as a substitute
+            for professional agricultural guidance.
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ FOOTER ═════════════════════════════════════════ -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col" style="max-width:420px;">
+            <h4>AgriSmart AI</h4>
+            <p>
+                An agricultural decision-support prototype integrating remote-sensing telemetry,
+                machine-learning classifiers, and automated advisory services for smallholder
+                farm management.
+            </p>
+        </div>
+        <div class="footer-col">
+            <h4>System Components</h4>
+            <ul>
+                <li>ResNet50 disease classifier</li>
+                <li>Random Forest crop suitability model</li>
+                <li>Open-Meteo meteorological service</li>
+                <li>Liquid LFM advisory language model</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Status</h4>
+            <ul>
+                <li>Build classification: Research prototype</li>
+                <li>Deployment: Local / demonstration</li>
+                <li>Sensor data: Simulated</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>AgriSmart AI — Agricultural Decision Support System</span>
+        <span>Not approved for commercial or operational agricultural use.</span>
+    </div>
+</footer>
 
 <script>
-  const BACKEND_URL = "http://127.0.0.1:8000/predict";
+    const API = "http://127.0.0.1:8000";
 
-  const imageInput = document.getElementById("imageInput");
-  const preview = document.getElementById("preview");
-  const submitBtn = document.getElementById("submitBtn");
-  const resultDiv = document.getElementById("result");
-
-  imageInput.addEventListener("change", () => {
-    const file = imageInput.files[0];
-    if (file) {
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = "block";
-      resultDiv.classList.remove("show");
+    /* ── System clock ── */
+    function tick() {
+        const d = new Date();
+        document.getElementById("sysClock").textContent =
+            d.toLocaleTimeString("en-GB", { hour12: false });
     }
-  });
+    tick();
+    setInterval(tick, 1000);
 
-  submitBtn.addEventListener("click", async () => {
-    const file = imageInput.files[0];
-    if (!file) {
-      alert("Please select an image first.");
-      return;
+    /* ── Backend status ── */
+    async function checkStatus() {
+        const dot  = document.getElementById("statusDot");
+        const text = document.getElementById("statusText");
+        try {
+            await fetch(`${API}/`);
+            dot.className = "sys-dot online";
+            text.textContent = "Server connected";
+        } catch {
+            dot.className = "sys-dot offline";
+            text.textContent = "Server unavailable — start uvicorn";
+        }
+    }
+    checkStatus();
+
+    /* ── Weather condition labels ── */
+    const wmoLabels = {
+        0: "Clear", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+        45: "Fog", 48: "Rime fog", 51: "Light drizzle", 61: "Rain",
+        71: "Snow", 80: "Rain showers", 95: "Thunderstorm"
+    };
+    function wmoLabel(code) { return wmoLabels[code] || "Unknown"; }
+
+    /* ── Dashboard polling ── */
+    async function updateDashboard() {
+        try {
+            const iot = await (await fetch(`${API}/iot_data`)).json();
+            document.getElementById("valMoisture").textContent = iot.soil_moisture.toFixed(1);
+            document.getElementById("valTemp").textContent     = iot.temperature.toFixed(1);
+            document.getElementById("valHum").textContent      = iot.humidity.toFixed(1);
+            document.getElementById("valPh").textContent       = iot.ph.toFixed(1);
+
+            const score = await (await fetch(`${API}/sustainability_score`)).json();
+            const pct = score.score;
+            document.getElementById("scoreNum").textContent = pct;
+            document.getElementById("scoreLabel").textContent =
+                pct >= 75 ? "Condition: Favourable" :
+                pct >= 50 ? "Condition: Requires Attention" :
+                            "Condition: Critical";
+            document.getElementById("scoreMsg").textContent = score.message;
+
+            const circ = 188.5;
+            document.getElementById("scoreFill").style.strokeDashoffset =
+                circ - (circ * pct / 100);
+
+            const logs = await (await fetch(`${API}/agent_logs`)).json();
+            const logsDiv = document.getElementById("agentLogs");
+            if (!logs.length) {
+                logsDiv.innerHTML =
+                    '<div class="agent-empty">No alerts recorded. Field conditions are within nominal range.</div>';
+            } else {
+                logsDiv.innerHTML = [...logs].reverse().slice(0, 3).map(l =>
+                    `<div class="agent-log"><span class="log-time">[${l.time}]</span>${l.message}</div>`
+                ).join("");
+            }
+        } catch { /* silent */ }
+
+        try {
+            const w = await (await fetch(`${API}/weather`)).json();
+            if (w && w.temperature !== undefined) {
+                document.getElementById("weatherIcon").textContent = wmoLabel(w.weathercode || 0);
+                document.getElementById("weatherTemp").textContent = `${w.temperature}°C`;
+                document.getElementById("weatherDesc").textContent =
+                    `Wind ${w.windspeed} km/h · Condition code ${w.weathercode}`;
+            }
+        } catch { /* silent */ }
+    }
+    setInterval(updateDashboard, 5000);
+    updateDashboard();
+
+    /* ── Disease detection ── */
+    const imageInput = document.getElementById("imageInput");
+    const preview    = document.getElementById("preview");
+    const submitBtn  = document.getElementById("submitBtn");
+    const uploadZone = document.getElementById("uploadZone");
+    const resultBox  = document.getElementById("diseaseResult");
+
+    imageInput.addEventListener("change", () => {
+        if (imageInput.files[0]) {
+            preview.src = URL.createObjectURL(imageInput.files[0]);
+            preview.style.display = "block";
+            resultBox.classList.remove("show", "error");
+        }
+    });
+
+    uploadZone.addEventListener("dragover", e => {
+        e.preventDefault();
+        uploadZone.classList.add("drag-over");
+    });
+    uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+    uploadZone.addEventListener("drop", e => {
+        e.preventDefault();
+        uploadZone.classList.remove("drag-over");
+        if (e.dataTransfer.files[0]) {
+            imageInput.files = e.dataTransfer.files;
+            preview.src = URL.createObjectURL(e.dataTransfer.files[0]);
+            preview.style.display = "block";
+        }
+    });
+
+    submitBtn.addEventListener("click", async () => {
+        if (!imageInput.files[0]) {
+            alert("Please select a leaf image before running the analysis.");
+            return;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Analysing…";
+        resultBox.classList.remove("show", "error");
+
+        const fd = new FormData();
+        fd.append("file", imageInput.files[0]);
+
+        try {
+            const res = await fetch(`${API}/predict`, { method: "POST", body: fd });
+            if (!res.ok) throw new Error("Server returned status " + res.status);
+            const data = await res.json();
+
+            const name = data.disease.replace(/___/g, " — ").replace(/_/g, " ");
+            const conf = (data.confidence * 100).toFixed(1);
+
+            document.getElementById("diseaseName").textContent = name;
+            document.getElementById("confText").textContent = conf + "%";
+            document.getElementById("confBar").style.width = conf + "%";
+            document.getElementById("adviceText").textContent =
+                data.precaution || "No advisory available for this condition.";
+
+            const warn = document.getElementById("diseaseWarning");
+            if (data.warning) {
+                warn.style.display = "block";
+                warn.querySelector("span").textContent = data.warning;
+            } else {
+                warn.style.display = "none";
+            }
+            resultBox.classList.add("show");
+        } catch (e) {
+            document.getElementById("diseaseName").textContent = "Analysis failed: " + e.message;
+            resultBox.classList.add("show", "error");
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Run Disease Analysis";
+    });
+
+    /* ── Crop recommendation ── */
+    const recBtn    = document.getElementById("recBtn");
+    const recResult = document.getElementById("recResult");
+
+    recBtn.addEventListener("click", async () => {
+        recBtn.disabled = true;
+        recBtn.textContent = "Generating…";
+
+        let iot = { temperature: 25, humidity: 60, ph: 6.5 };
+        try { iot = await (await fetch(`${API}/iot_data`)).json(); } catch {}
+
+        const payload = {
+            N: parseFloat(document.getElementById("cropN").value || 50),
+            P: parseFloat(document.getElementById("cropP").value || 50),
+            K: parseFloat(document.getElementById("cropK").value || 50),
+            temperature: iot.temperature,
+            humidity: iot.humidity,
+            ph: iot.ph,
+            rainfall: parseFloat(document.getElementById("cropRain").value || 100)
+        };
+
+        try {
+            const res = await fetch(`${API}/recommend_crop`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            document.getElementById("recCropName").textContent =
+                data.recommended_crop || data.error || "No result returned";
+            recResult.classList.add("show");
+            recResult.classList.remove("error");
+        } catch {
+            document.getElementById("recCropName").textContent =
+                "Unable to reach the recommendation service.";
+            recResult.classList.add("show", "error");
+        }
+
+        recBtn.disabled = false;
+        recBtn.textContent = "Generate Recommendation";
+    });
+
+    /* ── Chat assistant ── */
+    const chatBtn   = document.getElementById("chatBtn");
+    const chatInput = document.getElementById("chatInput");
+    const chatBox   = document.getElementById("chatBox");
+
+    async function sendChat() {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+        chatInput.value = "";
+
+        const userEl = document.createElement("div");
+        userEl.className = "msg msg-user";
+        userEl.textContent = msg;
+        chatBox.appendChild(userEl);
+
+        const thinking = document.createElement("div");
+        thinking.className = "msg msg-bot msg-thinking";
+        thinking.textContent = "Processing query — this may take 10–30 seconds…";
+        chatBox.appendChild(thinking);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        chatBtn.disabled = true;
+        chatInput.disabled = true;
+
+        try {
+            const res = await fetch(`${API}/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            thinking.className = "msg msg-bot";
+            thinking.textContent = data.reply;
+        } catch {
+            thinking.className = "msg msg-bot";
+            thinking.style.color = "#a3231f";
+            thinking.textContent =
+                "Unable to reach the advisory service. Confirm that the server is running.";
+        }
+
+        chatBtn.disabled = false;
+        chatInput.disabled = false;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        chatInput.focus();
     }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Checking...";
-    resultDiv.classList.remove("show");
+    chatBtn.addEventListener("click", sendChat);
+    chatInput.addEventListener("keydown", e => {
+        if (e.key === "Enter" && !e.shiftKey) sendChat();
+    });
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch(BACKEND_URL, {
-        method: "POST",
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error("Server returned an error: " + response.status);
-      }
-
-      const data = await response.json();
-
-      const diseaseName = data.disease.replace(/___/g, " - ").replace(/_/g, " ");
-      const confidencePercent = (data.confidence * 100).toFixed(1);
-
-      let html = `
-        <div class="disease-name">${diseaseName}</div>
-        <div class="confidence">Confidence: ${confidencePercent}%</div>
-      `;
-
-      if (data.precaution) {
-        html += `
-          <div class="precaution">
-            <span class="precaution-label">Recommended action:</span>
-            ${data.precaution}
-          </div>
-        `;
-      }
-
-      if (data.warning) {
-        html += `<div class="warning">${data.warning}</div>`;
-      }
-
-      resultDiv.innerHTML = html;
-      resultDiv.classList.add("show");
-
-    } catch (err) {
-      resultDiv.innerHTML = `<div class="error">Something went wrong: ${err.message}</div>
-        <div class="error">Make sure the backend server is running.</div>`;
-      resultDiv.classList.add("show");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Check Disease";
-    }
-  });
+    /* ── Nav active state on scroll ── */
+    const navLinks = document.querySelectorAll(".nav a");
+    navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            navLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+        });
+    });
 </script>
-
 </body>
 </html>
