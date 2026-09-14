@@ -227,7 +227,8 @@ __marimo__/
 *.onnx
 *.keras
 weights/
-checkpoints/
+!model/weights/class_indices.json
+!model/weights/crop_recommendation.pkl
 
 # Datasets (never commit raw data)
 data/
