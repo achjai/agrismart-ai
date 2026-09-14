@@ -226,7 +226,7 @@ __marimo__/
 *.ckpt
 *.onnx
 *.keras
-weights/
+model/weights/*
 !model/weights/class_indices.json
 !model/weights/crop_recommendation.pkl
 
