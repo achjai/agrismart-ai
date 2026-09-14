@@ -10,8 +10,14 @@ from tensorflow.keras.preprocessing import image as keras_image
 
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 import shutil
 import os
+from pathlib import Path
+
+# Base directories (works both locally and in Docker)
+BASE_DIR = Path(__file__).resolve().parent.parent
+SRC_DIR = Path(__file__).resolve().parent
 import asyncio
 import random
 import requests
@@ -50,13 +56,13 @@ model_resnet = Dense(38, activation='softmax')(model_resnet)
 
 model_main = Model(inputs=pt, outputs=model_resnet)
 try:
-    model_main.load_weights('model/weights/RESNET50_FINETUNED.weights.h5')
+    model_main.load_weights(str(BASE_DIR / 'model' / 'weights' / 'RESNET50_FINETUNED.weights.h5'))
 except Exception as e:
     print(f"Vision model weights not found, skipping for now: {e}")
 
 # Load class index mapping 
 try:
-    with open('model/weights/class_indices.json') as f:
+    with open(str(BASE_DIR / 'model' / 'weights' / 'class_indices.json')) as f:
         idx_to_class = json.load(f)
 except Exception:
     idx_to_class = {}
@@ -130,7 +136,7 @@ agent_logs = []
 
 # Load Crop Recommendation Model (Bonus A)
 try:
-    with open('model/weights/crop_recommendation.pkl', 'rb') as f:
+    with open(str(BASE_DIR / 'model' / 'weights' / 'crop_recommendation.pkl'), 'rb') as f:
         crop_model = pickle.load(f)
 except Exception as e:
     crop_model = None
@@ -183,7 +189,12 @@ async def startup_event():
 
 # ---- API endpoints ----
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
+def serve_frontend():
+    html_path = SRC_DIR / "index.html"
+    return html_path.read_text(encoding="utf-8")
+
+@app.get("/health")
 def health_check():
     return {"status": "AgriSmart AI backend is running"}
 

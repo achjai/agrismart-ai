@@ -976,7 +976,7 @@
 </footer>
 
 <script>
-    const API = "http://127.0.0.1:8000";
+    const API = "";
 
     /* ── System clock ── */
     function tick() {
@@ -992,7 +992,7 @@
         const dot  = document.getElementById("statusDot");
         const text = document.getElementById("statusText");
         try {
-            await fetch(`${API}/`);
+            await fetch(`${API}/health`);
             dot.className = "sys-dot online";
             text.textContent = "Server connected";
         } catch {
