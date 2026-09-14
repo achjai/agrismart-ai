@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgriSmart AI - Crop Disease Detector</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f4f7f4;
+  }
+  h1 {
+    color: #2e7d32;
+    text-align: center;
+  }<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgriSmart AI - Crop Disease Detector</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f4f7f4;
+  }
+  h1 {
+    color: #2e7d32;
+    text-align: center;
+  }
+  .upload-box {
+    background: white;
+    border: 2px dashed #a5d6a7;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+  }
+  input[type="file"] {
+    margin: 15px 0;
+  }
+  button {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background: #1b5e20;
+  }
+  button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+  }
+  #result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: white;
+    display: none;
+  }
+  #result.show {
+    display: block;
+  }
+  .disease-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1b5e20;
+  }
+  .confidence {
+    color: #555;
+    margin-top: 5px;
+  }
+  .precaution {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+    color: #333;
+    line-height: 1.4;
+  }
+  .precaution-label {
+    font-weight: bold;
+    color: #2e7d32;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .warning {
+    margin-top: 12px;
+    padding: 10px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    color: #8d6e00;
+    font-size: 14px;
+  }
+  #preview {
+    max-width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    display: none;
+  }
+  .error {
+    color: #c62828;
+  }
+</style>
+</head>
+<body>
+
+<h1>AgriSmart AI</h1>
+<p style="text-align:center; color:#555;">Upload a leaf photo to check for disease</p>
+
+<div class="upload-box">
+  <input type="file" id="imageInput" accept="image/*">
+  <br>
+  <img id="preview" alt="preview">
+  <br>
+  <button id="submitBtn">Check Disease</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+  const BACKEND_URL = "http://127.0.0.1:8000/predict";
+
+  const imageInput = document.getElementById("imageInput");
+  const preview = document.getElementById("preview");
+  const submitBtn = document.getElementById("submitBtn");
+  const resultDiv = document.getElementById("result");
+
+  imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0];
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+      resultDiv.classList.remove("show");
+    }
+  });
+
+  submitBtn.addEventListener("click", async () => {
+    const file = imageInput.files[0];
+    if (!file) {
+      alert("Please select an image first.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Checking...";
+    resultDiv.classList.remove("show");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("Server returned an error: " + response.status);
+      }
+
+      const data = await response.json();
+
+      const diseaseName = data.disease.replace(/___/g, " - ").replace(/_/g, " ");
+      const confidencePercent = (data.confidence * 100).toFixed(1);
+
+      let html = `
+        <div class="disease-name">${diseaseName}</div>
+        <div class="confidence">Confidence: ${confidencePercent}%</div>
+      `;
+
+      if (data.precaution) {
+        html += `
+          <div class="precaution">
+            <span class="precaution-label">Recommended action:</span>
+            ${data.precaution}
+          </div>
+        `;
+      }
+
+      if (data.warning) {
+        html += `<div class="warning">${data.warning}</div>`;
+      }
+
+      resultDiv.innerHTML = html;
+      resultDiv.classList.add("show");
+
+    } catch (err) {
+      resultDiv.innerHTML = `<div class="error">Something went wrong: ${err.message}</div>
+        <div class="error">Make sure the backend server is running.</div>`;
+      resultDiv.classList.add("show");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Check Disease";
+    }
+  });
+</script>
+
+</body>
+</html>
