@@ -103,6 +103,6 @@ Our core ResNet50 computer vision model was evaluated on the held-out validation
 
 ## 6. Links & Demonstration
 
-- **Live Deployed App:** [https://agrismart-ai-8elm.onrender.com/]
+- **Live Deployed App:** [https://agrismart-ai-8elm.onrender.com/] *(Note: Hosted on Render's free tier. If the disease prediction throws a 502 error due to the 512MB RAM limit, please use the 1-click local setup instructions above for full performance).*
 - **Demo Video (3-5 mins):** [https://drive.google.com/file/d/13iBVrmlFC4Bcu7lXGPLbkdWuBxwaoGIb/view?usp=sharing]
 - **Originality Declaration:** The core ResNet50 transfer learning architecture was adapted from standard Kaggle tutorials for the PlantVillage dataset. The data augmentation strategy, fine-tuning phase, full backend integration, synthetic dataset generation for Bonus A, and the entire frontend UI are original work created for this hackathon. AI coding assistants (Claude/Gemini) were utilized to accelerate boilerplate generation and deployment configuration.
