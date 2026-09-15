@@ -30,42 +30,36 @@ A judge can easily reproduce this environment and run the full stack locally in 
 - Git
 
 ### Step-by-Step Guide
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/achjai/agrismart-ai.git
    cd agrismart-ai
    ```
 
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. **Run the Application:**
 
-3. **Download Model Weights:**
-   The fine-tuned ResNet50 model weights (`RESNET50_FINETUNED.weights.h5`) are large (214MB) and hosted on Google Drive. 
-   We have provided a script that downloads them automatically:
-   *(Note: You must set your Google Drive File ID as an environment variable or edit the script directly if testing locally).*
-   ```bash
-   # If running locally, you can skip the script and manually place the weight file:
-   # 1. Download: [https://drive.google.com/file/d/1Hw-9exEnsLYtFLqYeOKogVtH6_XATw-8/view?usp=sharing]
-   # 2. Place it in: agrismart-ai/model/weights/RESNET50_FINETUNED.weights.h5
-   ```
-   *Note: The small mapping files (`class_indices.json` and `crop_recommendation.pkl`) are already included in the repo.*
+   - **Option A — 1-Click for Windows (Recommended):**
+     Double-click the `run_windows.bat` file. It will automatically create a virtual environment, install all dependencies, download the model weights (~214MB) from Google Drive, and start the server. No manual steps needed.
 
-4. **API Keys (for GenAI Assistant):**
-   The `.env` file with a working OpenRouter API key is already included in the repository. No additional configuration is needed.
-   *(If you skip this step or the key expires, the vision model and dashboard will still work — only the chat assistant requires the key).*
+   - **Option B — Manual Terminal:**
+     ```bash
+     pip install -r requirements.txt
+     ```
+     Then download the model weights manually:
+     - Download from: [Google Drive Link](https://drive.google.com/file/d/1Hw-9exEnsLYtFLqYeOKogVtH6_XATw-8/view?usp=sharing)
+     - Place the file at: `model/weights/RESNET50_FINETUNED.weights.h5`
 
-5. **Run the Application:**
-   **Option A (1-Click for Windows):**
-   Simply double-click the `run_windows.bat` file in the repository. It will automatically create a virtual environment, install dependencies, and start the server.
+     Then start the server:
+     ```bash
+     uvicorn src.main:app --host 127.0.0.1 --port 8000
+     ```
 
-   **Option B (Manual Terminal):**
-   ```bash
-   uvicorn src.main:app --host 127.0.0.1 --port 8000
-   ```
-6. **Test the UI:**
+3. **Test the UI:**
    Open your browser and navigate to `http://127.0.0.1:8000`. The frontend is served directly by the FastAPI backend.
+
+> [!NOTE]
+> The `.env` file with a working OpenRouter API key is already included in the repository. The GenAI assistant will work out of the box — no additional configuration needed.
 
 ---
 
