@@ -4,6 +4,17 @@ echo   AgriSmart AI - 1-Click Local Setup
 echo ==========================================
 echo.
 
+REM Check if Python is installed
+python --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ERROR: Python is not installed or not in PATH.
+    echo Please download Python 3.11 from: https://www.python.org/downloads/
+    echo IMPORTANT: During install, check "Add Python to PATH"
+    echo.
+    pause
+    exit /b 1
+)
+
 REM Step 1: Create virtual environment if it doesn't exist
 if not exist venv (
     echo [1/4] Creating Python virtual environment...

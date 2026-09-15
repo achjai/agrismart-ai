@@ -26,8 +26,8 @@ This repository fulfills the requirements of the **SIH 2026 Internal Hackathon (
 A judge can easily reproduce this environment and run the full stack locally in under 5 minutes.
 
 ### Prerequisites
-- Python 3.10 or 3.11
-- Git
+- **Python 3.10 or 3.11** — [Download here](https://www.python.org/downloads/) *(during install, check "Add Python to PATH")*
+- **Git** — [Download here](https://git-scm.com/downloads)
 
 ### Step-by-Step Guide
 
